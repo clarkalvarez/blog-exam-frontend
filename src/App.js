@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import UserProfile from "./components/user/UserProfile";
+import UsersList from "./components/user/UsersList";
+import UpdateProfile from "./components/user/UpdateProfile";
+import PrivateRoute from "./components/auth/PrivateRoute";
+import { useSelector } from "react-redux";
+import { selectUser } from "./features/auth/authSlice";
 
-function App() {
+const App = () => {
+  const user = useSelector(selectUser);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <div className="container">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* <Route
+            path="/profile"
+            element={<PrivateRoute component={UserProfile} />}
+          /> */}
+          <Route
+            path="/users"
+            element={<PrivateRoute component={UsersList} />}
+          />
+          <Route
+            path="/update-profile"
+            element={<PrivateRoute component={UpdateProfile} />}
+          />
+          <Route
+            path="/"
+            element={<Navigate to={user ? "/profile" : "/login"} />}
+          />
+        </Routes>
+      </div>
+    </>
   );
-}
+};
 
 export default App;
